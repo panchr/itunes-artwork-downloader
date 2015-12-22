@@ -2,7 +2,9 @@
 # iTunes.py
 # Provides an easy interface to access the Itunes API
 
-import requests
+import urllib2
+import urllib
+import json
 import sys
 
 '''
@@ -31,6 +33,9 @@ class Search(object):
 		self.country = country.upper()
 		self.methods = {}
 
+		# helper function: get a lambda function that calls self._base with
+		# the entity as the first argument; this is required because creating
+		# functions iteratively is ineffective otherwise
 		def get_lambda(e):
 			return lambda *args: self._base(e, *args)
 
@@ -68,12 +73,14 @@ class Search(object):
 		(dict) Parsed JSON representation of query response
 
 	Examples
-		search._api_query({"entity": "song", "terms": "Madness", "country": "US"})
-		search._api_query({"entity": "album", "terms": "Native, One Republic", "country": "UK"})
+		search._api_query({"entity": "song", "term": "Madness", "country": "US"})
+		search._api_query({"entity": "album", "term": "Native, One Republic", "country": "UK"})
 	'''
 	def _api_query(self, query):
-		r = requests.post(self.BASE_URL, query)
-		return r.json()
+		resp = urllib2.urlopen(self.BASE_URL, urllib.urlencode(query))
+		if resp.getcode() != 200:
+			raise ValueError("Unable to make call successfully")
+		return json.loads(resp.read())
 
 	'''
 	(Internal) Search the API for a given query and entity
