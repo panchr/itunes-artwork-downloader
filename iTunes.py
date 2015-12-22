@@ -16,7 +16,7 @@ Examples
 	search.song("Madness") # search for the song "Madness"
 '''
 class Search(object):
-	BASE_URL = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/wa/wsSearch"
+	BASE_URL = "http://itunes.apple.com/search/"
 	ALLOWED_ENTITIES = ["musicVideo", "tvSeason", "movie", "id", "shortFilm", "ebook", "album", "audiobook", "podcast", "software", "song"]
 
 	'''
