@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMApplicationBuild</key>
+	<string>419</string>
+	<key>AMApplicationVersion</key>
+	<string>2.6</string>
+	<key>AMDocumentVersion</key>
+	<string>2</string>
+	<key>actions</key>
+	<array>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>1.0.2</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run AppleScript.action</string>
+				<key>ActionName</key>
+				<string>Run AppleScript</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>source</key>
+					<string>on run {input, parameters}	set outputDir to (POSIX path of (path to temporary items from user domain as string)) &amp; "/itunes_artwork_"	tell application "iTunes"		set stdoutData to {outputDir}		set delimiter to "			"		repeat with songPath in selection			if artworks of songPath is {} then				set songData to (name of songPath) &amp; delimiter &amp; (artist of songPath) &amp; delimiter &amp; (album of songPath)				copy songData to end of stdoutData			end if		end repeat		return stdoutData	end tellend run</string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.Automator.RunScript</string>
+				<key>CFBundleVersion</key>
+				<string>1.0.2</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunScriptAction</string>
+				<key>IgnoresInput</key>
+				<false/>
+				<key>InputUUID</key>
+				<string>380F75D1-2462-463C-839F-F3242A87E132</string>
+				<key>Keywords</key>
+				<array>
+					<string>Run</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>68A231FB-C825-48DB-9087-30AC63A60602</string>
+				<key>UUID</key>
+				<string>A95FFC65-FD2A-4B34-B269-2B398AA2D485</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<string>on run {input, parameters}
+	
+	(* Your script goes here *)
+	
+	return input
+end run</string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+				</dict>
+				<key>conversionLabel</key>
+				<integer>0</integer>
+				<key>isViewVisible</key>
+				<true/>
+				<key>location</key>
+				<string>487.500000:468.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/Base.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>2.0.3</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<dict/>
+					<key>CheckedForUserDefaultShell</key>
+					<dict/>
+					<key>inputMethod</key>
+					<dict/>
+					<key>shell</key>
+					<dict/>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run Shell Script.action</string>
+				<key>ActionName</key>
+				<string>Run Shell Script</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<string># Rushy Panchal
+# downloadArtwork.py
+# STDIN/STDOUT wrapper around iTunes.py
+
+import urllib2
+import urllib
+import json
+import sys
+import os
+
+API_URL = "http://itunes.apple.com/search"
+
+def main():
+	'''Main process: read data from stdin and write to stdout'''
+	temp_dir = sys.stdin.readline().strip("\n")
+	if not os.path.exists(temp_dir):
+		os.mkdir(temp_dir)
+	output = open(os.path.join(temp_dir, ".download_stdout"), "w")
+
+	for line in sys.stdin:
+		split_data = line.strip("\n").split("\t\t\t")
+
+		artwork_url = getArtworkUrl(*split_data)
+
+		if artwork_url:
+			disk_path = unicode(os.path.join(temp_dir, ",".join(split_data)), errors = 'ignore').encode("ascii", errors = "ignore")
+			urllib.urlretrieve(artwork_url, disk_path)
+		else:
+			disk_path = "-"
+
+		output.write(disk_path + "\n")
+
+	output.close()
+
+def getArtworkUrl(song, artist = "", album = ""):
+	'''Get the artwork URL for a given song, with optional artist and album names'''
+	# form a search query by concatenating the various metadata
+	if album:
+		resp = attemptSearchQuery(album, "album")
+		# try to get a more generic result by omitting the album name
+		if not resp: return getArtworkUrl(song, artist)
+	else:
+		resp = attemptSearchQuery(song, "song")
+		if not resp: return getArtworkUrl(song + "," + artist, artist)
+	
+	best = resp[0]['artworkUrl60']
+	for result in resp:
+		if artist in result['artistName']:
+			best = result['artworkUrl60']
+			break
+
+	return best.replace("60x60", "600x600")
+
+def attemptSearchQuery(query, entity):
+	'''Attempt a search query'''
+	params = {"term": query, "entity": entity, "attribute": entity + "Term", "country": "US", "media": "music", "limit": 10}
+	resp = urllib2.urlopen(API_URL, urllib.urlencode(params))
+	if resp.getcode() == 200:
+		data = json.loads(resp.read())
+		if data["resultCount"] &gt;= 1: return data['results']
+
+	return "" # no result or failed call
+
+if __name__ == '__main__':
+	main()
+</string>
+					<key>CheckedForUserDefaultShell</key>
+					<true/>
+					<key>inputMethod</key>
+					<integer>0</integer>
+					<key>shell</key>
+					<string>/usr/bin/python</string>
+					<key>source</key>
+					<string></string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.RunShellScript</string>
+				<key>CFBundleVersion</key>
+				<string>2.0.3</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunShellScriptAction</string>
+				<key>InputUUID</key>
+				<string>05E0DFC8-36C0-4F3B-B47B-CFB5CDBF8AD0</string>
+				<key>Keywords</key>
+				<array>
+					<string>Shell</string>
+					<string>Script</string>
+					<string>Command</string>
+					<string>Run</string>
+					<string>Unix</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>5938A889-107D-4AA7-A23C-3F0B7ECE5B20</string>
+				<key>StartAction</key>
+				<false/>
+				<key>UUID</key>
+				<string>91937C9B-F4C9-43C9-A345-309AB141C679</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<integer>0</integer>
+						<key>name</key>
+						<string>inputMethod</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+					<key>1</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>1</string>
+					</dict>
+					<key>2</key>
+					<dict>
+						<key>default value</key>
+						<false/>
+						<key>name</key>
+						<string>CheckedForUserDefaultShell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>2</string>
+					</dict>
+					<key>3</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>COMMAND_STRING</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>3</string>
+					</dict>
+					<key>4</key>
+					<dict>
+						<key>default value</key>
+						<string>/bin/sh</string>
+						<key>name</key>
+						<string>shell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>4</string>
+					</dict>
+				</dict>
+				<key>conversionLabel</key>
+				<integer>0</integer>
+				<key>isViewVisible</key>
+				<true/>
+				<key>location</key>
+				<string>487.500000:651.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>1.0.2</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.applescript.object</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run AppleScript.action</string>
+				<key>ActionName</key>
+				<string>Run AppleScript</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>source</key>
+					<string>on run {input, parameters}	set outputDir to (POSIX path of (path to temporary items from user domain as string)) &amp; "/itunes_artwork_"	set inputFilePath to (outputDir &amp; "/.download_stdout")	set inputDataRaw to paragraphs of (read inputFilePath)	set iterations to 1		tell application "iTunes"		repeat with song in selection			if artworks of song is {} then				set filePath to item iterations of inputDataRaw				set data of artwork 1 of song to (read filePath as picture)				set iterations to (iterations + 1)			end if		end repeat	end tell	do shell script "rm -rf " &amp; outputDir	display notification "Done setting artwork of " &amp; ((iterations - 1) as string) &amp; " songs."end run</string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.Automator.RunScript</string>
+				<key>CFBundleVersion</key>
+				<string>1.0.2</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunScriptAction</string>
+				<key>InputUUID</key>
+				<string>4C39BC58-1617-404D-B650-54B0C3470C2E</string>
+				<key>Keywords</key>
+				<array>
+					<string>Run</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>1D6DDFF2-BE24-4152-8869-335D2557781D</string>
+				<key>UUID</key>
+				<string>D51297A5-68F5-481A-A90C-D7E607D405B7</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<string>on run {input, parameters}
+	
+	(* Your script goes here *)
+	
+	return input
+end run</string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+				</dict>
+				<key>conversionLabel</key>
+				<integer>0</integer>
+				<key>isViewVisible</key>
+				<true/>
+				<key>location</key>
+				<string>487.500000:897.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/Base.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<true/>
+		</dict>
+	</array>
+	<key>connectors</key>
+	<dict>
+		<key>2F1813BB-9A5B-445F-A695-8F774A670FF3</key>
+		<dict>
+			<key>from</key>
+			<string>91937C9B-F4C9-43C9-A345-309AB141C679 - 91937C9B-F4C9-43C9-A345-309AB141C679</string>
+			<key>to</key>
+			<string>D51297A5-68F5-481A-A90C-D7E607D405B7 - D51297A5-68F5-481A-A90C-D7E607D405B7</string>
+		</dict>
+		<key>F02A1A4C-B496-47B8-B3B4-3964D989BFE0</key>
+		<dict>
+			<key>from</key>
+			<string>A95FFC65-FD2A-4B34-B269-2B398AA2D485 - A95FFC65-FD2A-4B34-B269-2B398AA2D485</string>
+			<key>to</key>
+			<string>91937C9B-F4C9-43C9-A345-309AB141C679 - 91937C9B-F4C9-43C9-A345-309AB141C679</string>
+		</dict>
+	</dict>
+	<key>workflowMetaData</key>
+	<dict>
+		<key>serviceApplicationBundleID</key>
+		<string>com.apple.iTunes</string>
+		<key>serviceApplicationPath</key>
+		<string>/Applications/iTunes.app</string>
+		<key>serviceInputTypeIdentifier</key>
+		<string>com.apple.Automator.text</string>
+		<key>serviceOutputTypeIdentifier</key>
+		<string>com.apple.Automator.nothing</string>
+		<key>serviceProcessesInput</key>
+		<integer>0</integer>
+		<key>workflowTypeIdentifier</key>
+		<string>com.apple.Automator.servicesMenu</string>
+	</dict>
+</dict>
+</plist>
