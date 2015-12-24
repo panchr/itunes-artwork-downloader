@@ -45,18 +45,14 @@ def getArtworkUrl(song, artist = "", album = ""):
 		resp = attemptSearchQuery(song, "song")
 		if not resp: return getArtworkUrl(song + "," + artist, artist)
 	
-	best = resp[0]['artworkUrl60']
-	for result in resp:
-		# attempt to find the best result, which is when the artist matches
-		if artist in result['artistName']:
-			best = result['artworkUrl60']
-			break
+	results = filter(lambda item: artist in item["artistName"], resp)
+	best = results[0] if len(results) >= 1 else resp[0]
 
-	return best.replace("60x60", "600x600")
+	return best['artworkUrl60'].replace("60x60", "600x600")
 
 def attemptSearchQuery(query, entity):
 	'''Attempt a search query'''
-	params = {"term": query, "entity": entity, "attribute": entity + "Term", "country": "US", "media": "music", "limit": 10}
+	params = {"term": query, "entity": entity, "country": "US", "media": "music", "limit": 50}
 	resp = urllib2.urlopen(API_URL, urllib.urlencode(params))
 	if resp.getcode() == 200:
 		data = json.loads(resp.read())

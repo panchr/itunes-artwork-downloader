@@ -104,12 +104,10 @@ end run</string>
 						<string>0</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>487.500000:468.000000</string>
+				<string>449.000000:316.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -182,6 +180,7 @@ def main():
 	temp_dir = sys.stdin.readline().strip("\n")
 	if not os.path.exists(temp_dir):
 		os.mkdir(temp_dir)
+	# AppleScript reads from here
 	output = open(os.path.join(temp_dir, ".download_stdout"), "w")
 
 	for line in sys.stdin:
@@ -190,6 +189,7 @@ def main():
 		artwork_url = getArtworkUrl(*split_data)
 
 		if artwork_url:
+			# filter out unicode characters from the filepath
 			disk_path = unicode(os.path.join(temp_dir, ",".join(split_data)), errors = 'ignore').encode("ascii", errors = "ignore")
 			urllib.urlretrieve(artwork_url, disk_path)
 		else:
@@ -210,17 +210,14 @@ def getArtworkUrl(song, artist = "", album = ""):
 		resp = attemptSearchQuery(song, "song")
 		if not resp: return getArtworkUrl(song + "," + artist, artist)
 	
-	best = resp[0]['artworkUrl60']
-	for result in resp:
-		if artist in result['artistName']:
-			best = result['artworkUrl60']
-			break
+	results = filter(lambda item: artist in item["artistName"], resp)
+	best = results[0] if len(results) &gt;= 1 else resp[0]
 
-	return best.replace("60x60", "600x600")
+	return best['artworkUrl60'].replace("60x60", "600x600")
 
 def attemptSearchQuery(query, entity):
 	'''Attempt a search query'''
-	params = {"term": query, "entity": entity, "attribute": entity + "Term", "country": "US", "media": "music", "limit": 10}
+	params = {"term": query, "entity": entity, "country": "US", "media": "music", "limit": 50}
 	resp = urllib2.urlopen(API_URL, urllib.urlencode(params))
 	if resp.getcode() == 200:
 		data = json.loads(resp.read())
@@ -266,8 +263,6 @@ if __name__ == '__main__':
 				</array>
 				<key>OutputUUID</key>
 				<string>5938A889-107D-4AA7-A23C-3F0B7ECE5B20</string>
-				<key>StartAction</key>
-				<false/>
 				<key>UUID</key>
 				<string>91937C9B-F4C9-43C9-A345-309AB141C679</string>
 				<key>UnlocalizedApplications</key>
@@ -342,12 +337,10 @@ if __name__ == '__main__':
 						<string>4</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>487.500000:651.000000</string>
+				<string>449.000000:499.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
@@ -446,12 +439,10 @@ end run</string>
 						<string>0</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>487.500000:897.000000</string>
+				<string>449.000000:745.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -461,19 +452,19 @@ end run</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>2F1813BB-9A5B-445F-A695-8F774A670FF3</key>
-		<dict>
-			<key>from</key>
-			<string>91937C9B-F4C9-43C9-A345-309AB141C679 - 91937C9B-F4C9-43C9-A345-309AB141C679</string>
-			<key>to</key>
-			<string>D51297A5-68F5-481A-A90C-D7E607D405B7 - D51297A5-68F5-481A-A90C-D7E607D405B7</string>
-		</dict>
-		<key>F02A1A4C-B496-47B8-B3B4-3964D989BFE0</key>
+		<key>657E0DC3-26C0-45D0-BD24-9594990DC478</key>
 		<dict>
 			<key>from</key>
 			<string>A95FFC65-FD2A-4B34-B269-2B398AA2D485 - A95FFC65-FD2A-4B34-B269-2B398AA2D485</string>
 			<key>to</key>
 			<string>91937C9B-F4C9-43C9-A345-309AB141C679 - 91937C9B-F4C9-43C9-A345-309AB141C679</string>
+		</dict>
+		<key>CA5E6573-28FC-41D8-87C6-994A47E7479C</key>
+		<dict>
+			<key>from</key>
+			<string>91937C9B-F4C9-43C9-A345-309AB141C679 - 91937C9B-F4C9-43C9-A345-309AB141C679</string>
+			<key>to</key>
+			<string>D51297A5-68F5-481A-A90C-D7E607D405B7 - D51297A5-68F5-481A-A90C-D7E607D405B7</string>
 		</dict>
 	</dict>
 	<key>workflowMetaData</key>
